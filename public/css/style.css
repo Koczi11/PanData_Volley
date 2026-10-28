@@ -80,3 +80,96 @@ small {
     letter-spacing: 0.0625rem;
     color: var(--color-tertiary);
 }
+
+
+/* ==========================================================================
+   Main Layout: Split-Screen Authentication (Grid & Flexbox)
+   ========================================================================== */
+main {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+    gap: 3.5rem;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+}
+
+/* Sekcja lewa: Prezentacja systemu i branding */
+main > section[aria-labelledby="branding-heading"] {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+main > section[aria-labelledby="branding-heading"] header p {
+    font-weight: 800;
+    font-size: 1.375rem;
+    letter-spacing: 0.125rem;
+    color: var(--color-text-main);
+}
+
+main > section[aria-labelledby="branding-heading"] header small {
+    display: block;
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-top: 0.25rem;
+}
+
+main > section[aria-labelledby="branding-heading"] h1 {
+    font-size: 2.75rem;
+    font-weight: 800;
+    letter-spacing: -0.03125rem;
+    line-height: 1.15;
+    color: var(--color-text-main);
+}
+
+main > section[aria-labelledby="branding-heading"] > p {
+    font-size: 1.125rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    max-width: 34rem;
+}
+
+/* Sekcja prawa: Karta logowania do portalu */
+main > section[aria-labelledby="form-heading"] {
+    background-color: var(--color-bg-card);
+    border: 0.0625rem solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2.25rem;
+    box-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+main > section[aria-labelledby="form-heading"] header small {
+    color: var(--color-primary);
+    font-weight: 600;
+    display: inline-block;
+    border: 0.0625rem solid var(--color-primary);
+    padding: 0.1875rem 0.5rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.5rem;
+}
+
+main > section[aria-labelledby="form-heading"] header h2 {
+    font-size: 1.625rem;
+    letter-spacing: 0.0625rem;
+    color: var(--color-text-main);
+}
+
+/* Stopka karty logowania */
+main > section[aria-labelledby="form-heading"] footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.25rem;
+    border-top: 0.0625rem solid var(--color-border);
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+}
