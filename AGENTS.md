@@ -3,7 +3,15 @@
 Ten plik jest przewodnikiem dla agentow AI pracujacych w tym repozytorium. Przed wprowadzeniem zmian przeczytaj go razem z `README.md` i sprawdz aktualny stan kodu. Nie zakladaj, ze opisana funkcja istnieje, dopoki nie potwierdzisz tego w plikach projektu.
 
 ## Cel projektu
+
 To edukacyjna aplikacja webowa napisana w czystym PHP 8.3. Korzysta z lekkiej, samodzielnie zaimplementowanej architektury MVC, bez frameworka PHP. Aplikacja dziala w kontenerach Nginx i PHP-FPM uruchamianych przez Docker Compose.
+
+Aktualnie aplikacja obsluguje:
+
+- strone glowna pod `/`,
+- liste projektow pod `/projects`,
+- szczegoly projektu pod `/projects/{id}`,
+- odpowiedz 404 dla nieznanych tras.
 
 ## Stack technologiczny
 

@@ -11,11 +11,11 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $routing = new Routing();
 
-$routing->get('/', DefaultController::class, 'index');
 $routing->get('/projects', ProjectController::class, 'index');
 $routing->get('/projects/{id}', ProjectController::class, 'show');
-$routing->get('/login', SecurityController::class, 'login');                //Zwykła trasa
-$routing->get('/login/{id}', SecurityController::class, 'loginWithUser');   //Trasa z parametrem
+$routing->get('/', DefaultController::class, 'index');
+$routing->get('/login', SecurityController::class, 'login');
+$routing->get('/login/{id}', SecurityController::class, 'loginWithUser');
 
 $routeFound = $routing->dispatch(
     $_SERVER['REQUEST_METHOD'],
