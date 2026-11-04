@@ -66,3 +66,4 @@ colorSchemeQuery.addEventListener('change', (event) => {
 });
 
 syncThemeToggle();
+

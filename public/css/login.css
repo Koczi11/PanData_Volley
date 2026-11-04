@@ -90,22 +90,26 @@ form {
 
 /* Wybór roli (Role Selector) */
 fieldset {
-    border: 0.0625rem solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: 0.75rem 1rem;
+    border: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
-    background-color: var(--color-surface-muted);
+    background: transparent;
 }
 
 legend {
-    font-size: 0.75rem;
-    font-family: var(--font-mono);
+    float: left;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    padding: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
     color: var(--color-muted);
     text-transform: uppercase;
-    letter-spacing: 0.0625rem;
-    padding: 0 0.375rem;
+    letter-spacing: 0.03125rem;
+    font-family: var(--font-sans);
 }
 
 fieldset label {
@@ -115,13 +119,13 @@ fieldset label {
     align-items: center;
     justify-content: center;
     gap: 0.375rem;
-    padding: 0.5rem 0.625rem;
-    border-radius: var(--radius-sm);
+    padding: 0.625rem 0.5rem;
+    border-radius: var(--radius-md);
     background-color: var(--color-surface);
     border: 0.0625rem solid var(--color-border);
-    color: var(--color-muted);
+    color: var(--color-text);
     font-size: 0.8125rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-speed) var(--transition-ease);
 }
@@ -129,15 +133,15 @@ fieldset label {
 /* Stany :hover i zaznaczenia dla wyboru roli */
 fieldset label:hover {
     border-color: var(--color-primary);
-    color: var(--color-text);
-    background-color: rgba(222, 80, 53, 0.08);
+    color: var(--color-primary);
+    background-color: var(--color-surface-muted);
 }
 
 fieldset label:has(input[type="radio"]:checked) {
     border-color: var(--color-primary);
     color: var(--color-primary);
     background-color: rgba(222, 80, 53, 0.12);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 fieldset input[type="radio"] {
