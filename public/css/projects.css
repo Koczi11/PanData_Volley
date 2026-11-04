@@ -3,6 +3,8 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: var(--color-bg);
+    color: var(--color-text);
 }
 
 /* Nawigacja */
@@ -11,13 +13,19 @@
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 2rem;
-    background-color: #1e3a8a;
+    background-color: var(--color-surface);
+    border-bottom: 0.0625rem solid var(--color-border);
 }
 
 .dashboard__nav a {
-    color: white;
+    color: var(--color-text);
     font-weight: bold;
     text-decoration: none;
+    transition: color var(--transition-speed) var(--transition-ease);
+}
+
+.dashboard__nav a:hover {
+    color: var(--color-primary);
 }
 
 /* Sidebar i main ustawione obok siebie */
@@ -27,28 +35,35 @@
 }
 
 .dashboard__sidebar {
-    width: 220px;
+    width: 13.75rem;
     padding: 2rem;
     box-sizing: border-box;
-    background-color: #6d28d9;
-    color: white;
+    background-color: var(--color-surface-muted);
+    border-right: 0.0625rem solid var(--color-border);
+    color: var(--color-text);
 }
 
 .dashboard__menu {
     padding: 0;
     list-style: none;
+    margin-top: 1rem;
 }
 
 .dashboard__menu a {
     display: block;
     padding: 0.75rem;
-    color: white;
+    color: var(--color-muted);
     text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-speed) var(--transition-ease),
+                color var(--transition-speed) var(--transition-ease);
 }
 
 .dashboard__menu a:hover,
 .dashboard__menu .is-active {
-    background-color: #8b5cf6;
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    font-weight: 600;
 }
 
 .dashboard__main {
@@ -58,17 +73,19 @@
     height: auto;
     margin: 0;
     padding: 2rem;
-    background-color: #dcfce7;
-    color: #14532d;
+    background-color: var(--color-bg);
+    color: var(--color-text);
 }
 
 /* Na małym ekranie sidebar przechodzi nad main */
-@media (max-width: 700px) {
+@media (max-width: 43.75rem) {
     .dashboard__content {
         flex-direction: column;
     }
 
     .dashboard__sidebar {
         width: 100%;
+        border-right: none;
+        border-bottom: 0.0625rem solid var(--color-border);
     }
 }

@@ -1,23 +1,33 @@
 /* ==========================================================================
-   Design Tokens & CSS Variables (Figma Palette & Global Typography)
+   Design Tokens & CSS Variables (Theme Data: Light & Dark)
    ========================================================================== */
 :root {
-    /* Kolory z palety Figma (Page 1) */
-    --color-primary: #DE5035;        /* Primary: akcenty, przyciski, focus */
-    --color-primary-hover: #C53E25;  /* Ciemniejszy odcień primary dla :hover */
-    --color-primary-glow: rgba(222, 80, 53, 0.25);
-    --color-secondary: #2D6A4F;      /* Secondary: zielony sportowy/akcent */
-    --color-tertiary: #94A3B8;       /* Tertiary: zgaszone teksty, labele */
-    --color-neutral: #16191D;        /* Neutral: tło kart i kontenerów */
+    color-scheme: light;
 
-    /* Kolory powierzchni i kontrastu */
-    --color-bg-body: #0E1115;        /* Głębokie ciemne tło strony */
-    --color-bg-card: #16191D;        /* Tło karty logowania */
-    --color-bg-input: #101317;       /* Tło pól formularza */
-    --color-border: #262B33;         /* Ramki sekcji i kontrolek */
-    --color-border-hover: #3C4450;   /* Ramki w stanie hover */
-    --color-text-main: #F8FAFC;      /* Główny kolor tekstu */
-    --color-text-muted: #94A3B8;     /* Drugorzędny kolor tekstu */
+    /* Tokeny kolorystyczne — motyw jasny */
+    --color-bg: #f6f7fb;
+    --color-surface: #ffffff;
+    --color-surface-muted: #eef2f7;
+    --color-text: #172033;
+    --color-muted: #667085;
+    --color-primary: #DE5035;          /* PanData Volley Primary */
+    --color-primary-hover: #C53E25;
+    --color-primary-glow: rgba(222, 80, 53, 0.25);
+    --color-secondary: #2D6A4F;
+    --color-border: #d9e0eb;
+    --color-border-hover: #b0bac9;
+    --color-focus: rgba(222, 80, 53, 0.35);
+    --color-danger-bg: #fff1f2;
+    --color-danger-text: #be123c;
+    --shadow-soft: 0 1.125rem 2.8125rem rgba(21, 32, 51, 0.12);
+
+    /* Aliasy pomocnicze dla spójności komponentów */
+    --color-bg-body: var(--color-bg);
+    --color-bg-card: var(--color-surface);
+    --color-bg-input: var(--color-surface);
+    --color-text-main: var(--color-text);
+    --color-text-muted: var(--color-muted);
+    --color-tertiary: var(--color-muted);
 
     /* Typografia (Inter + JetBrains Mono) */
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -29,6 +39,35 @@
     --radius-lg: 0.75rem;
     --transition-speed: 0.2s;
     --transition-ease: ease-in-out;
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+
+    /* Tokeny kolorystyczne — motyw ciemny */
+    --color-bg: #101418;
+    --color-surface: #171d24;
+    --color-surface-muted: #202833;
+    --color-text: #edf2f7;
+    --color-muted: #a8b3c2;
+    --color-primary: #DE5035;
+    --color-primary-hover: #E2634B;
+    --color-primary-glow: rgba(222, 80, 53, 0.35);
+    --color-secondary: #2D6A4F;
+    --color-border: #2f3a48;
+    --color-border-hover: #3C4450;
+    --color-focus: rgba(222, 80, 53, 0.45);
+    --color-danger-bg: #3f121d;
+    --color-danger-text: #fda4af;
+    --shadow-soft: 0 1.125rem 2.8125rem rgba(0, 0, 0, 0.45);
+
+    /* Aliasy pomocnicze dla spójności komponentów */
+    --color-bg-body: var(--color-bg);
+    --color-bg-card: var(--color-surface);
+    --color-bg-input: #101317;
+    --color-text-main: var(--color-text);
+    --color-text-muted: var(--color-muted);
+    --color-tertiary: var(--color-muted);
 }
 
 /* ==========================================================================
@@ -44,13 +83,13 @@
 
 html {
     font-size: 100%; /* Baza 16px dla jednostek rem */
-    color-scheme: dark;
+    background: var(--color-bg);
 }
 
 body {
     min-height: 100vh;
-    background-color: var(--color-bg-body);
-    color: var(--color-text-main);
+    background: var(--color-bg);
+    color: var(--color-text);
     font-family: var(--font-sans);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -61,17 +100,17 @@ body {
    Global Typography & Elements
    ========================================================================== */
 h1, h2, h3, h4, h5, h6 {
-    color: var(--color-text-main);
+    color: var(--color-text);
     font-weight: 700;
     line-height: 1.2;
 }
 
 p {
-    color: var(--color-text-muted);
+    color: var(--color-muted);
 }
 
 a {
-    color: var(--color-tertiary);
+    color: var(--color-muted);
     text-decoration: none;
     transition: color var(--transition-speed) var(--transition-ease);
 }
@@ -85,5 +124,43 @@ small {
     font-family: var(--font-mono);
     font-size: 0.75rem;
     letter-spacing: 0.0625rem;
-    color: var(--color-tertiary);
+    color: var(--color-muted);
+}
+
+/* ==========================================================================
+   Theme Toggle Button
+   ========================================================================== */
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 100;
+    display: inline-flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    border: 0.0625rem solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    transition: background var(--transition-speed) var(--transition-ease),
+                border-color var(--transition-speed) var(--transition-ease),
+                transform var(--transition-speed) var(--transition-ease),
+                box-shadow var(--transition-speed) var(--transition-ease);
+}
+
+.theme-toggle:hover {
+    background: var(--color-surface-muted);
+    border-color: var(--color-border-hover);
+    transform: scale(1.05);
+}
+
+.theme-toggle:focus-visible {
+    outline: 0.1875rem solid var(--color-focus);
+    outline-offset: 0.1875rem;
 }
