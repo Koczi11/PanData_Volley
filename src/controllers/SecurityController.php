@@ -10,15 +10,7 @@ final class SecurityController extends AppController
     {
         $this->render('login', [
             'pageTitle' => 'PanData Volley - Logowanie',
-            'heroTitle' => 'Professional Analysis System'
-        ]);
-    }
-
-    public function loginWithUser(int $id): void
-    {
-        $this->render('login', [
-            'pageTitle' => 'Player #' . $id . ' Login',
-            'heroTitle' => 'Login Player nr. ' . $id
+            'heroTitle' => 'Professional Analysis System',
         ]);
     }
 }

@@ -7,7 +7,7 @@
             <small>PRO VOLLEYBALL ANALYTICS</small>
         </header>
 
-        <h1 id="branding-heading"><?= htmlspecialchars($heroTitle ?? 'Professional Analysis System') ?></h1>
+        <h1 id="branding-heading"><?= htmlspecialchars($heroTitle ?? 'Professional Analysis System', ENT_QUOTES, 'UTF-8') ?></h1>
         <p>
             Pro Analysis System for professional volleyball teams.
         </p>
