@@ -8,9 +8,7 @@ To edukacyjna aplikacja webowa napisana w czystym PHP 8.3. Korzysta z lekkiej, s
 
 Aktualnie aplikacja obsluguje:
 
-- strone glowna pod `/`,
-- liste projektow pod `/projects`,
-- szczegoly projektu pod `/projects/{id}`,
+- strone logowania jako strone glowna pod `/` (oraz `/login`),
 - odpowiedz 404 dla nieznanych tras.
 
 ## Stack technologiczny
@@ -72,7 +70,7 @@ $routing->post('/example', ExampleController::class, 'store');
 
 `src/Routing.php` laczy metode HTTP i sciezke URL z publiczna metoda kontrolera. Parametry zapisane jako `{name}` sa obecnie dopasowywane tylko do cyfr, konwertowane na `int` i przekazywane do akcji kontrolera przez nazwane argumenty.
 
-Przyklad: `/projects/{id}` wywoluje `ProjectController::show(int $id)`.
+Przyklad: `/example/{id}` wywoluje `ExampleController::show(int $id)`.
 
 Router obsluguje obecnie metody GET i POST. Nie dodawaj logiki biznesowej do routera.
 
