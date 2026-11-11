@@ -79,6 +79,25 @@ main > section[aria-labelledby="form-heading"] header h2 {
     color: var(--color-text);
 }
 
+/* Komunikat błędu logowania */
+.login-alert {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.8125rem 1rem;
+    border-radius: var(--radius-md);
+    border: 0.0625rem solid var(--color-danger-text);
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger-text);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.login-alert i {
+    flex-shrink: 0;
+}
+
 /* ==========================================================================
    Form Controls & Interactive States (:hover, :focus-visible)
    ========================================================================== */

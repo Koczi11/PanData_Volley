@@ -24,4 +24,10 @@ abstract class AppController
 
         require $layoutPath;
     }
+
+    protected function redirect(string $path, int $statusCode = 302): never
+    {
+        header('Location: ' . $path, true, $statusCode);
+        exit;
+    }
 }

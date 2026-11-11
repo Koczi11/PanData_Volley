@@ -1,4 +1,13 @@
-<?php $stylesheets = ['/css/login.css']; ?>
+<?php
+$stylesheets = ['/css/login.css'];
+$roles = [
+    'admin' => 'Admin',
+    'coach' => 'Coach',
+    'analyst' => 'Analyst',
+    'player' => 'Player',
+];
+$currentRole = $selectedRole ?? '';
+?>
 
 <main>
     <section aria-labelledby="branding-heading">
@@ -19,38 +28,45 @@
             <h2 id="form-heading">SIGN IN</h2>
         </header>
 
+        <?php if (!empty($errorMessage)): ?>
+            <div class="login-alert" role="alert" aria-live="polite">
+                <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                <span><?= htmlspecialchars((string) $errorMessage, ENT_QUOTES, 'UTF-8') ?></span>
+            </div>
+        <?php endif; ?>
+
         <form action="/login" method="POST">
             <fieldset>
                 <legend>Select Role:</legend>
-                <label>
-                    <input type="radio" name="role" value="admin"> Admin
-                </label>
-                <label>
-                    <input type="radio" name="role" value="coach"> Coach
-                </label>
-                <label>
-                    <input type="radio" name="role" value="analyst"> Analyst
-                </label>
-                <label>
-                    <input type="radio" name="role" value="player"> Player
-                </label>
+                <?php foreach ($roles as $value => $label): ?>
+                    <label>
+                        <input
+                            type="radio"
+                            name="role"
+                            value="<?= htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?>"
+                            <?= $currentRole === $value ? 'checked' : '' ?>
+                        >
+                        <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
+                    </label>
+                <?php endforeach; ?>
             </fieldset>
 
             <div>
                 <label for="email">Work Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
+                <input
+                    type="email"
+                    id="email"
                     name="email"
+                    value="<?= htmlspecialchars((string) ($enteredEmail ?? ''), ENT_QUOTES, 'UTF-8') ?>"
                     required
                 >
             </div>
 
             <div>
                 <label for="password">Password</label>
-                <input 
-                    type="password" 
-                    id="password" 
+                <input
+                    type="password"
+                    id="password"
                     name="password"
                     required
                 >
@@ -66,7 +82,6 @@
             </div>
 
             <button type="submit">Sign In &rarr;</button>
-        
         </form>
 
         <footer>
