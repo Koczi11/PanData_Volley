@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl">
+<html lang="<?= htmlspecialchars($pageLang ?? 'pl', ENT_QUOTES, 'UTF-8') ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,18 +38,17 @@
     <?php endforeach; ?>
     <script src="https://kit.fontawesome.com/8fd9367667.js" crossorigin="anonymous"></script>
 </head>
-<body>
-    <button
-        class="theme-toggle"
-        type="button"
-        aria-label="Włącz ciemny motyw"
-        aria-pressed="false"
-        title="Zmień motyw"
-    >
-        <i class="fa-solid fa-moon" aria-hidden="true"></i>
-    </button>
+<body<?= !empty($useAdminNavbar) ? ' class="has-admin-navbar"' : '' ?>>
+    <?php if (!empty($useAdminNavbar)): ?>
+        <?php require __DIR__ . '/partials/admin-navbar.html.php'; ?>
+    <?php else: ?>
+        <?php require __DIR__ . '/partials/theme-toggle.html.php'; ?>
+    <?php endif; ?>
 
     <?= $content ?>
     <script src="/js/theme.js" defer></script>
+    <?php foreach ($scripts ?? [] as $script): ?>
+        <script src="<?= htmlspecialchars($script, ENT_QUOTES, 'UTF-8') ?>" defer></script>
+    <?php endforeach; ?>
 </body>
 </html>

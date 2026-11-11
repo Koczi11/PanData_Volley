@@ -1,0 +1,339 @@
+/* ==========================================================================
+   Universal Admin Top Navbar
+   ========================================================================== */
+.admin-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    background-color: var(--color-surface);
+    border-bottom: 0.0625rem solid var(--color-border);
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="dark"] .admin-navbar {
+    box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.35);
+}
+
+.admin-navbar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    max-width: 86rem;
+    min-height: 4.25rem;
+    margin: 0 auto;
+    padding: 0.625rem 1.5rem;
+}
+
+/* Brand po lewej: miejsce na przyszłe logo + napis PanData Volley */
+.admin-navbar__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.admin-navbar__brand:hover {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.admin-navbar__brand:focus-visible {
+    outline: 0.125rem solid var(--color-primary);
+    outline-offset: 0.25rem;
+    border-radius: var(--radius-sm);
+}
+
+.admin-navbar__logo-slot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.375rem;
+    height: 2.375rem;
+    border-radius: var(--radius-md);
+    background: rgba(222, 80, 53, 0.14);
+    border: 0.0625rem solid rgba(222, 80, 53, 0.45);
+    color: var(--color-primary);
+    font-size: 1.0625rem;
+    flex-shrink: 0;
+}
+
+.admin-navbar__brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.admin-navbar__brand-name {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.04rem;
+    color: var(--color-text);
+    white-space: nowrap;
+}
+
+.admin-navbar__brand-tag {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.08rem;
+    color: var(--color-primary);
+    margin-top: 0.1875rem;
+}
+
+/* Linki nawigacyjne (desktop) */
+.admin-navbar__nav {
+    display: flex;
+    align-items: center;
+}
+
+.admin-navbar__list {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-navbar__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--transition-speed) var(--transition-ease),
+                background-color var(--transition-speed) var(--transition-ease);
+}
+
+.admin-navbar__link:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-muted);
+    text-decoration: none;
+}
+
+.admin-navbar__link.is-active {
+    color: var(--color-primary);
+    background-color: rgba(222, 80, 53, 0.12);
+}
+
+.admin-navbar__link:focus-visible {
+    outline: 0.125rem solid var(--color-primary);
+    outline-offset: 0.125rem;
+}
+
+/* Prawa strona navbara */
+.admin-navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex-shrink: 0;
+}
+
+.admin-navbar__user-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 999rem;
+    border: 0.0625rem solid var(--color-border);
+    background-color: var(--color-surface-muted);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.admin-navbar__status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--color-secondary);
+    box-shadow: 0 0 0 0.1875rem rgba(45, 106, 79, 0.22);
+    flex-shrink: 0;
+}
+
+/* Osadzenie globalnego przycisku .theme-toggle wewnątrz navbara */
+.has-admin-navbar .theme-toggle {
+    position: static;
+    width: 2.375rem;
+    height: 2.375rem;
+    box-shadow: none;
+    background: var(--color-surface-muted);
+}
+
+.admin-navbar__logout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4375rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--radius-md);
+    border: 0.0625rem solid var(--color-border);
+    background-color: transparent;
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color var(--transition-speed) var(--transition-ease),
+                color var(--transition-speed) var(--transition-ease),
+                background-color var(--transition-speed) var(--transition-ease);
+}
+
+.admin-navbar__logout:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background-color: rgba(222, 80, 53, 0.08);
+}
+
+.admin-navbar__logout:focus-visible {
+    outline: 0.125rem solid var(--color-primary);
+    outline-offset: 0.125rem;
+}
+
+/* Przycisk Hamburger (widoczny na mobile/tablet) */
+.admin-navbar__hamburger {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3125rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 0.0625rem solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-muted);
+    cursor: pointer;
+    transition: border-color var(--transition-speed) var(--transition-ease),
+                background-color var(--transition-speed) var(--transition-ease);
+}
+
+.admin-navbar__hamburger:hover {
+    border-color: var(--color-primary);
+}
+
+.admin-navbar__hamburger:focus-visible {
+    outline: 0.125rem solid var(--color-primary);
+    outline-offset: 0.125rem;
+}
+
+.admin-navbar__hamburger-line {
+    width: 1.125rem;
+    height: 0.125rem;
+    border-radius: 999rem;
+    background-color: var(--color-text);
+    transition: transform var(--transition-speed) var(--transition-ease),
+                opacity var(--transition-speed) var(--transition-ease);
+}
+
+.admin-navbar.is-open .admin-navbar__hamburger-line:nth-child(1) {
+    transform: translateY(0.4375rem) rotate(45deg);
+}
+
+.admin-navbar.is-open .admin-navbar__hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.admin-navbar.is-open .admin-navbar__hamburger-line:nth-child(3) {
+    transform: translateY(-0.4375rem) rotate(-45deg);
+}
+
+.admin-navbar__mobile-account {
+    display: none;
+}
+
+/* Główny kontener strony administratora */
+.admin-shell {
+    max-width: 86rem;
+    margin: 0 auto;
+    padding: 1.75rem 1.5rem 3rem;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints (Mobile Hamburger Menu)
+   ========================================================================== */
+@media (max-width: 64rem) {
+    .admin-navbar__inner {
+        position: relative;
+        padding: 0.625rem 1rem;
+    }
+
+    .admin-navbar__hamburger {
+        display: inline-flex;
+    }
+
+    .admin-navbar__nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 1rem;
+        background-color: var(--color-surface);
+        border-top: 0.0625rem solid var(--color-border);
+        border-bottom: 0.0625rem solid var(--color-border);
+        box-shadow: var(--shadow-soft);
+    }
+
+    .admin-navbar.is-open .admin-navbar__nav {
+        display: flex;
+    }
+
+    .admin-navbar__list {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.375rem;
+    }
+
+    .admin-navbar__link {
+        width: 100%;
+        padding: 0.75rem 0.875rem;
+    }
+}
+
+@media (max-width: 44rem) {
+    .admin-navbar__user-pill,
+    .admin-navbar__logout-form {
+        display: none;
+    }
+
+    .admin-navbar__mobile-account {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 0.0625rem solid var(--color-border);
+    }
+
+    .admin-navbar__mobile-user {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--color-muted);
+    }
+
+    .admin-navbar__logout--mobile {
+        width: 100%;
+        padding: 0.6875rem 1rem;
+    }
+
+    .admin-shell {
+        padding: 1.25rem 1rem 2.25rem;
+    }
+}
