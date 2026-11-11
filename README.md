@@ -6,7 +6,8 @@ Aplikacja do analizy i telemetrii siatkarskiej w PHP 8.3 uruchamiana w kontenera
 
 | Obszar | Co robi |
 |---|---|
-| Strona startowa / Logowanie | Wyświetla formularz logowania pod `/` (oraz `/login`). |
+| Strona startowa / Logowanie | Wyświetla formularz logowania pod `/` (oraz `/login`) i obsługuje tymczasowe logowanie administratora (`POST /login`, `POST /logout`). |
+| Panel administratora | Strona główna admina pod `/admin` z responsywnym paskiem nawigacji. |
 | Środowisko | Uruchamia Nginx, PHP-FPM, PostgreSQL, Mailpit oraz pgAdmin przez Docker Compose. |
 
 ## Tech stack

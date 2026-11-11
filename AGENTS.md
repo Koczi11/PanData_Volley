@@ -8,7 +8,9 @@ To edukacyjna aplikacja webowa napisana w czystym PHP 8.3. Korzysta z lekkiej, s
 
 Aktualnie aplikacja obsluguje:
 
-- strone logowania jako strone glowna pod `/` (oraz `/login`),
+- strone logowania jako strone glowna pod `/` (oraz `GET /login`),
+- udawane logowanie administratora (`POST /login`) i wylogowanie (`POST /logout`),
+- strone glowna administratora pod `/admin` z uniwersalnym paskiem nawigacji,
 - odpowiedz 404 dla nieznanych tras.
 
 ## Stack technologiczny
