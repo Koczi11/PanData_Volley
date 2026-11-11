@@ -12,6 +12,12 @@ final class SecurityController extends AppController
 
     public function login(): void
     {
+        $this->startSession();
+
+        if ($this->isAdminAuthenticated()) {
+            $this->redirect('/admin');
+        }
+
         $this->renderLogin();
     }
 
@@ -20,6 +26,7 @@ final class SecurityController extends AppController
         $role = trim((string) ($_POST['role'] ?? ''));
         $email = trim((string) ($_POST['email'] ?? ''));
         $password = (string) ($_POST['password'] ?? '');
+        $rememberSession = ($_POST['remember_session'] ?? '') === '1';
 
         if ($role === '') {
             http_response_code(401);
@@ -27,6 +34,7 @@ final class SecurityController extends AppController
                 'Please select a role before signing in.',
                 $role,
                 $email,
+                $rememberSession,
             );
             return;
         }
@@ -37,6 +45,7 @@ final class SecurityController extends AppController
                 'Invalid role selected. Please choose Admin to sign in.',
                 $role,
                 $email,
+                $rememberSession,
             );
             return;
         }
@@ -50,14 +59,19 @@ final class SecurityController extends AppController
                 'Invalid email or password.',
                 $role,
                 $email,
+                $rememberSession,
             );
             return;
         }
 
+        $cookieLifetime = $rememberSession ? self::REMEMBER_SESSION_LIFETIME : 0;
+        $this->startSession($cookieLifetime);
         session_regenerate_id(true);
+
         $_SESSION['user'] = [
             'email' => self::DEMO_ADMIN_EMAIL,
             'role' => self::DEMO_ADMIN_ROLE,
+            'remember' => $rememberSession,
         ];
 
         $this->redirect('/admin', 303);
@@ -65,19 +79,19 @@ final class SecurityController extends AppController
 
     public function logout(): void
     {
+        $this->startSession();
         $_SESSION = [];
 
         if (ini_get('session.use_cookies')) {
             $params = session_get_cookie_params();
-            setcookie(
-                session_name(),
-                '',
-                time() - 42000,
-                $params['path'],
-                $params['domain'],
-                $params['secure'],
-                $params['httponly'],
-            );
+            setcookie(session_name(), '', [
+                'expires' => time() - 42000,
+                'path' => $params['path'],
+                'domain' => $params['domain'],
+                'secure' => $params['secure'],
+                'httponly' => $params['httponly'],
+                'samesite' => $params['samesite'] ?: 'Lax',
+            ]);
         }
 
         session_destroy();
@@ -88,6 +102,7 @@ final class SecurityController extends AppController
         ?string $errorMessage = null,
         string $selectedRole = '',
         string $enteredEmail = '',
+        bool $rememberSession = false,
     ): void {
         $this->render('login', [
             'pageTitle' => 'PanData Volley - Sign In',
@@ -96,6 +111,7 @@ final class SecurityController extends AppController
             'errorMessage' => $errorMessage,
             'selectedRole' => $selectedRole,
             'enteredEmail' => $enteredEmail,
+            'rememberSession' => $rememberSession,
         ]);
     }
 }

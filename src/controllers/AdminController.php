@@ -8,11 +8,13 @@ final class AdminController extends AppController
 {
     public function index(): void
     {
-        $user = $_SESSION['user'] ?? null;
+        $this->startSession();
 
-        if (!is_array($user) || ($user['role'] ?? null) !== 'admin') {
+        if (!$this->isAdminAuthenticated()) {
             $this->redirect('/');
         }
+
+        $user = $_SESSION['user'];
 
         $this->render('admin/home', [
             'pageTitle' => 'PanData Volley - Admin Home',

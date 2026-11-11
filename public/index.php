@@ -9,8 +9,6 @@ use App\Routing;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-session_start();
-
 $routing = new Routing();
 
 $routing->get('/', SecurityController::class, 'login');

@@ -76,7 +76,12 @@ $currentRole = $selectedRole ?? '';
 
             <div>
                 <label>
-                    <input type="checkbox" name="remember_session" value="1">
+                    <input
+                        type="checkbox"
+                        name="remember_session"
+                        value="1"
+                        <?= !empty($rememberSession) ? 'checked' : '' ?>
+                    >
                     Remember session
                 </label>
             </div>
