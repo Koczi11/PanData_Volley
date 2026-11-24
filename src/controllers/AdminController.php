@@ -8,6 +8,11 @@ final class AdminController extends AppController
 {
     public function index(): void
     {
+        $this->renderAdminPage('admin/home', 'PanData Volley - Admin Home', 'home');
+    }
+
+    private function renderAdminPage(string $template, string $pageTitle, string $activeNav): void
+    {
         $this->startSession();
 
         if (!$this->isAdminAuthenticated()) {
@@ -16,11 +21,11 @@ final class AdminController extends AppController
 
         $user = $_SESSION['user'];
 
-        $this->render('admin/home', [
-            'pageTitle' => 'PanData Volley - Admin Home',
+        $this->render($template, [
+            'pageTitle' => $pageTitle,
             'pageLang' => 'en',
             'userEmail' => (string) ($user['email'] ?? 'admin@pandata.com'),
-            'activeNav' => 'home',
+            'activeNav' => $activeNav,
         ]);
     }
 }
