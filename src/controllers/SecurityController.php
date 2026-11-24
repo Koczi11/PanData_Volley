@@ -4,18 +4,34 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Http\Request;
+use App\Security\AccessGuard;
+use App\Security\AuthService;
+use App\Security\CsrfTokenManager;
+use App\Security\SessionManager;
+
 final class SecurityController extends AppController
 {
-    private const DEMO_ADMIN_ROLE = 'admin';
-    private const DEMO_ADMIN_EMAIL = 'admin@pandata.com';
-    private const DEMO_ADMIN_PASSWORD = '123';
+    public function __construct(
+        private readonly AuthService $auth,
+        private readonly CsrfTokenManager $csrf,
+        private readonly SessionManager $session,
+        private readonly AccessGuard $guard,
+        private readonly Request $request,
+    ) {
+    }
 
     public function login(): void
     {
-        $this->startSession();
+        $this->session->sendNoCacheHeaders();
 
-        if ($this->isAdminAuthenticated()) {
-            $this->redirect('/admin');
+        $user = $this->auth->currentUser(
+            $this->request->cookie(AuthService::REMEMBER_COOKIE_NAME),
+            $this->request->clientIp,
+        );
+
+        if ($user !== null) {
+            $this->redirect($user->role->homePath());
         }
 
         $this->renderLogin();
@@ -23,79 +39,57 @@ final class SecurityController extends AppController
 
     public function authenticate(): void
     {
-        $role = trim((string) ($_POST['role'] ?? ''));
-        $email = trim((string) ($_POST['email'] ?? ''));
-        $password = (string) ($_POST['password'] ?? '');
-        $rememberSession = ($_POST['remember_session'] ?? '') === '1';
+        $this->session->sendNoCacheHeaders();
 
-        if ($role === '') {
-            http_response_code(401);
+        $this->csrf->assertValid($this->request->postString('_csrf_token'), 'login');
+
+        $role = trim($this->request->postString('role'));
+        $email = trim($this->request->postString('email'));
+        $password = $this->request->postString('password');
+        $rememberSession = $this->request->postBool('remember_session');
+
+        $result = $this->auth->authenticate(
+            selectedRole: $role,
+            email: $email,
+            password: $password,
+            remember: $rememberSession,
+            ipAddress: $this->request->clientIp,
+        );
+
+        if (!$result->success || $result->user === null) {
             $this->renderLogin(
-                'Please select a role before signing in.',
-                $role,
-                $email,
-                $rememberSession,
+                errorMessage: $result->errorMessage ?? 'Authentication failed.',
+                selectedRole: $role,
+                enteredEmail: $email,
+                rememberSession: $rememberSession,
+                statusCode: 401,
             );
             return;
         }
 
-        if ($role !== self::DEMO_ADMIN_ROLE) {
-            http_response_code(401);
-            $this->renderLogin(
-                'Invalid role selected. Please choose Admin to sign in.',
-                $role,
-                $email,
-                $rememberSession,
-            );
-            return;
-        }
-
-        if (
-            strtolower($email) !== self::DEMO_ADMIN_EMAIL
-            || $password !== self::DEMO_ADMIN_PASSWORD
-        ) {
-            http_response_code(401);
-            $this->renderLogin(
-                'Invalid email or password.',
-                $role,
-                $email,
-                $rememberSession,
-            );
-            return;
-        }
-
-        $cookieLifetime = $rememberSession ? self::REMEMBER_SESSION_LIFETIME : 0;
-        $this->startSession($cookieLifetime);
-        session_regenerate_id(true);
-
-        $_SESSION['user'] = [
-            'email' => self::DEMO_ADMIN_EMAIL,
-            'role' => self::DEMO_ADMIN_ROLE,
-            'remember' => $rememberSession,
-        ];
-
-        $this->redirect('/admin', 303);
+        $this->redirect($result->user->role->homePath(), 303);
     }
 
     public function logout(): void
     {
-        $this->startSession();
-        $_SESSION = [];
+        $this->session->sendNoCacheHeaders();
+        $this->csrf->assertValid($this->request->postString('_csrf_token'), 'logout');
 
-        if (ini_get('session.use_cookies')) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', [
-                'expires' => time() - 42000,
-                'path' => $params['path'],
-                'domain' => $params['domain'],
-                'secure' => $params['secure'],
-                'httponly' => $params['httponly'],
-                'samesite' => $params['samesite'] ?: 'Lax',
-            ]);
-        }
+        $this->auth->logout(
+            $this->request->cookie(AuthService::REMEMBER_COOKIE_NAME),
+            $this->request->clientIp,
+        );
 
-        session_destroy();
-        $this->redirect('/', 303);
+        $this->redirect('/login', 303);
+    }
+
+    public function me(): void
+    {
+        $user = $this->guard->requireAuthenticated(redirectBrowser: false);
+
+        $this->json([
+            'user' => $user->toPublicArray(),
+        ]);
     }
 
     private function renderLogin(
@@ -103,6 +97,7 @@ final class SecurityController extends AppController
         string $selectedRole = '',
         string $enteredEmail = '',
         bool $rememberSession = false,
+        int $statusCode = 200,
     ): void {
         $this->render('login', [
             'pageTitle' => 'PanData Volley - Sign In',
@@ -112,6 +107,7 @@ final class SecurityController extends AppController
             'selectedRole' => $selectedRole,
             'enteredEmail' => $enteredEmail,
             'rememberSession' => $rememberSession,
-        ]);
+            'csrfToken' => $this->csrf->getToken('login'),
+        ], $statusCode);
     }
 }

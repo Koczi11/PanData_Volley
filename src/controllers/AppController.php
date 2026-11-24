@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Http\RedirectException;
+
 abstract class AppController
 {
-    protected const REMEMBER_SESSION_LIFETIME = 2592000; // 30 days in seconds
-
-    protected function render(string $template, array $variables = []): void
+    /**
+     * @param array<string, mixed> $variables
+     */
+    protected function render(string $template, array $variables = [], int $statusCode = 200): void
     {
         $viewsPath = dirname(__DIR__, 2) . '/public/views';
         $templatePath = $viewsPath . '/' . $template . '.html.php';
@@ -18,6 +21,7 @@ abstract class AppController
             throw new \RuntimeException('View not found: ' . $template);
         }
 
+        http_response_code($statusCode);
         extract($variables, EXTR_SKIP);
 
         ob_start();
@@ -27,39 +31,23 @@ abstract class AppController
         require $layoutPath;
     }
 
-    protected function startSession(int $cookieLifetime = 0): void
+    /**
+     * @param array<string, mixed> $payload
+     */
+    protected function json(array $payload, int $statusCode = 200): void
     {
-        if (session_status() === PHP_SESSION_ACTIVE) {
-            return;
+        http_response_code($statusCode);
+
+        if (!headers_sent()) {
+            header('Content-Type: application/json; charset=utf-8');
         }
 
-        $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
-
-        ini_set('session.use_strict_mode', '1');
-        ini_set('session.gc_maxlifetime', (string) self::REMEMBER_SESSION_LIFETIME);
-
-        session_set_cookie_params([
-            'lifetime' => $cookieLifetime,
-            'path' => '/',
-            'domain' => '',
-            'secure' => $isHttps,
-            'httponly' => true,
-            'samesite' => 'Lax',
-        ]);
-
-        session_start();
-    }
-
-    protected function isAdminAuthenticated(): bool
-    {
-        $user = $_SESSION['user'] ?? null;
-
-        return is_array($user) && ($user['role'] ?? null) === 'admin';
+        $encoded = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        echo $encoded !== false ? $encoded : '{}';
     }
 
     protected function redirect(string $path, int $statusCode = 302): never
     {
-        header('Location: ' . $path, true, $statusCode);
-        exit;
+        throw new RedirectException($path, $statusCode);
     }
 }

@@ -49,6 +49,11 @@ $signedInEmail = $userEmail ?? 'admin@pandata.com';
                     <span><?= htmlspecialchars((string) $signedInEmail, ENT_QUOTES, 'UTF-8') ?></span>
                 </div>
                 <form action="/logout" method="POST">
+                    <input
+                        type="hidden"
+                        name="_csrf_token"
+                        value="<?= htmlspecialchars((string) ($logoutCsrfToken ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                    >
                     <button type="submit" class="admin-navbar__logout admin-navbar__logout--mobile">
                         <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
                         Sign Out
@@ -60,12 +65,17 @@ $signedInEmail = $userEmail ?? 'admin@pandata.com';
         <div class="admin-navbar__actions">
             <span class="admin-navbar__user-pill" title="<?= htmlspecialchars((string) $signedInEmail, ENT_QUOTES, 'UTF-8') ?>">
                 <span class="admin-navbar__status-dot" aria-hidden="true"></span>
-                <span>Admin</span>
+                <span><?= htmlspecialchars((string) ($userRoleLabel ?? 'Admin'), ENT_QUOTES, 'UTF-8') ?></span>
             </span>
 
             <?php require __DIR__ . '/theme-toggle.html.php'; ?>
 
             <form class="admin-navbar__logout-form" action="/logout" method="POST">
+                <input
+                    type="hidden"
+                    name="_csrf_token"
+                    value="<?= htmlspecialchars((string) ($logoutCsrfToken ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                >
                 <button type="submit" class="admin-navbar__logout">
                     <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
                     <span>Sign Out</span>

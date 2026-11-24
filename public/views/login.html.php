@@ -36,6 +36,11 @@ $currentRole = $selectedRole ?? '';
         <?php endif; ?>
 
         <form action="/login" method="POST">
+            <input
+                type="hidden"
+                name="_csrf_token"
+                value="<?= htmlspecialchars((string) ($csrfToken ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+            >
             <fieldset>
                 <legend>Select Role:</legend>
                 <?php foreach ($roles as $value => $label): ?>
