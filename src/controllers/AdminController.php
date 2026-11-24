@@ -16,6 +16,11 @@ final class AdminController extends AppController
         $this->renderAdminPage('admin/matches', 'PanData Volley - Admin Matches', 'matches');
     }
 
+    public function analytics(): void
+    {
+        $this->renderAdminPage('admin/analytics', 'PanData Volley - Admin Analytics', 'analytics');
+    }
+
     private function renderAdminPage(string $template, string $pageTitle, string $activeNav): void
     {
         $this->startSession();
