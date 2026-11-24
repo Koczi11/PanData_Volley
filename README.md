@@ -23,6 +23,7 @@ Aplikacja do analizy i telemetrii siatkarskiej w PHP 8.3 uruchamiana w kontenera
 ## Szybki start
 
 ```bash
+cp .env.example .env
 docker compose up --build -d
 ```
 
@@ -38,6 +39,8 @@ Aplikacja: **http://localhost:8080**
 
 ```text
 .
+├── database/
+│   └── init.sql
 ├── docker/
 │   ├── db/
 │   ├── nginx/
@@ -49,6 +52,8 @@ Aplikacja: **http://localhost:8080**
 ├── src/
 │   ├── controllers/
 │   └── Routing.php
+├── .dockerignore
+├── .env.example
 ├── composer.json
 ├── docker-compose.yaml
 └── README.md

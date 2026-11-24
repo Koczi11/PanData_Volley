@@ -1,0 +1,2 @@
+-- PanData Volley - PostgreSQL initialization script
+-- Database schema and seed data will be added in subsequent stages.

@@ -4,7 +4,7 @@ Ten plik jest przewodnikiem dla agentow AI pracujacych w tym repozytorium. Przed
 
 ## Cel projektu
 
-To edukacyjna aplikacja webowa napisana w czystym PHP 8.3. Korzysta z lekkiej, samodzielnie zaimplementowanej architektury MVC, bez frameworka PHP. Aplikacja dziala w kontenerach Nginx i PHP-FPM uruchamianych przez Docker Compose.
+To edukacyjna aplikacja webowa napisana w czystym PHP 8.3. Korzysta z lekkiej, samodzielnie zaimplementowanej architektury MVC, bez frameworka PHP. Aplikacja dziala w kontenerach Docker Compose (Nginx, PHP-FPM, PostgreSQL, Mailpit, pgAdmin).
 
 Aktualnie aplikacja obsluguje:
 
@@ -19,6 +19,8 @@ Aktualnie aplikacja obsluguje:
 - Composer i autoloading PSR-4
 - Nginx jako serwer HTTP
 - PHP-FPM do wykonywania kodu PHP
+- PostgreSQL 16 jako baza danych
+- Mailpit (lokalny serwer SMTP) oraz pgAdmin
 - Docker oraz Docker Compose
 - HTML i CSS bez frameworka frontendowego
 
@@ -26,7 +28,10 @@ Aktualnie aplikacja obsluguje:
 
 ```text
 .
+├── database/
+│   └── init.sql               # skrypt inicjalizacyjny PostgreSQL
 ├── docker/
+│   ├── db/                    # obraz bazy danych PostgreSQL
 │   ├── nginx/                 # obraz i konfiguracja Nginx
 │   └── php/                   # obraz PHP-FPM i rozszerzenia PHP
 ├── public/                    # jedyny publicznie dostepny katalog
@@ -36,8 +41,10 @@ Aktualnie aplikacja obsluguje:
 ├── src/
 │   ├── controllers/           # kontrolery aplikacji
 │   └── Routing.php            # rejestracja i obsluga tras
+├── .dockerignore              # wykluczenia kontekstu budowania Docker
+├── .env.example               # szablon zmiennych srodowiskowych
 ├── composer.json              # konfiguracja autoloadingu
-└── docker-compose.yaml        # uslugi `server` i `php`
+└── docker-compose.yaml        # uslugi `server`, `php`, `db`, `mailpit`, `pgadmin-wdpai`
 ```
 
 Nie umieszczaj logiki aplikacji ani danych wrazliwych w `public/`. Ten katalog jest document rootem Nginx i sluzy tylko jako punkt wejscia oraz miejsce na widoki i zasoby publiczne.
@@ -140,10 +147,11 @@ Typowy porzadek prac:
 ## Uruchamianie projektu
 
 ```bash
+cp .env.example .env
 docker compose up --build -d
 ```
 
-Aplikacja jest domyslnie dostepna pod `http://localhost:8081`. Port mozna zmienic przez zmienna `APP_PORT`.
+Aplikacja jest domyslnie dostepna pod `http://localhost:8080`. Port mozna zmienic przez zmienna `APP_PORT`.
 
 Przydatne polecenia:
 

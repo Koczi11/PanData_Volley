@@ -25,13 +25,14 @@ RUN apk add --no-cache \
         bcmath \
         pgsql \
         pdo_pgsql \
+    && (php -m | grep -iq '^fileinfo$' || docker-php-ext-install -j"$(nproc)" fileinfo) \
     && apk del .build-deps
 
 RUN { \
-      echo 'memory_limit = -1'; \
-      echo 'upload_max_filesize = 512M'; \
-      echo 'post_max_size = 512M'; \
+      echo 'memory_limit = 256M'; \
+      echo 'upload_max_filesize = 16M'; \
+      echo 'post_max_size = 20M'; \
       echo 'max_file_uploads = 20'; \
-    } > /usr/local/etc/php/conf.d/mealplanner.ini
+    } > /usr/local/etc/php/conf.d/pandata.ini
 
 COPY . .
