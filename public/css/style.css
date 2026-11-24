@@ -164,3 +164,68 @@ small {
     outline: 0.1875rem solid var(--color-focus);
     outline-offset: 0.1875rem;
 }
+
+/* ==========================================================================
+   HTTP Error Pages (400 / 401 / 403 / 404 / 405 / 500)
+   ========================================================================== */
+.error-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.error-card {
+    width: 100%;
+    max-width: 28rem;
+    padding: 2.25rem 2rem;
+    border-radius: var(--radius-lg);
+    border: 0.0625rem solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-soft);
+    text-align: center;
+}
+
+.error-card__code {
+    font-family: var(--font-mono);
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+}
+
+.error-card__title {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.error-card__message {
+    font-size: 0.9375rem;
+    margin-bottom: 1.5rem;
+}
+
+.error-card__actions {
+    display: flex;
+    justify-content: center;
+}
+
+.error-card__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 1.25rem;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background var(--transition-speed) var(--transition-ease);
+}
+
+.error-card__link:hover {
+    background: var(--color-primary-hover);
+    color: #ffffff;
+    text-decoration: none;
+}

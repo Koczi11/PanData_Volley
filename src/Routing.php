@@ -5,63 +5,133 @@ declare(strict_types=1);
 namespace App;
 
 use App\Controller\AppController;
+use App\Http\BadRequestException;
+use App\Http\ErrorResponder;
+use App\Http\HttpException;
+use App\Http\MethodNotAllowedException;
+use App\Http\NotFoundException;
+use App\Http\RedirectException;
+use App\Http\Request;
 
 final class Routing
 {
+    /**
+     * @var list<array{
+     *     method: string,
+     *     path: string,
+     *     isStatic: bool,
+     *     segments: list<array{isParam: bool, literal?: string, name?: string, type?: 'int'|'string', regex?: string}>,
+     *     pattern: string,
+     *     parameterTypes: array<string, 'int'|'string'>,
+     *     controller: class-string<AppController>,
+     *     action: string
+     * }>
+     */
     private array $routes = [];
 
+    /**
+     * @param \Closure(class-string<AppController>): AppController $controllerFactory
+     */
+    public function __construct(
+        private readonly \Closure $controllerFactory,
+        private readonly ErrorResponder $errorResponder,
+    ) {
+    }
+
+    /**
+     * @param class-string<AppController> $controller
+     */
     public function get(string $path, string $controller, string $action): void
     {
         $this->add('GET', $path, $controller, $action);
     }
 
+    /**
+     * @param class-string<AppController> $controller
+     */
     public function post(string $path, string $controller, string $action): void
     {
         $this->add('POST', $path, $controller, $action);
     }
 
-    private function add(
+    /**
+     * @param class-string<AppController> $controller
+     */
+    public function put(string $path, string $controller, string $action): void
+    {
+        $this->add('PUT', $path, $controller, $action);
+    }
+
+    /**
+     * @param class-string<AppController> $controller
+     */
+    public function patch(string $path, string $controller, string $action): void
+    {
+        $this->add('PATCH', $path, $controller, $action);
+    }
+
+    /**
+     * @param class-string<AppController> $controller
+     */
+    public function delete(string $path, string $controller, string $action): void
+    {
+        $this->add('DELETE', $path, $controller, $action);
+    }
+
+    /**
+     * @param class-string<AppController> $controller
+     */
+    public function add(
         string $method,
         string $path,
         string $controller,
         string $action,
     ): void {
+        $normalizedMethod = strtoupper(trim($method));
+        $normalizedPath = $this->normalizePath($path);
+        $compiled = $this->compileRoute($normalizedPath);
+
         $this->routes[] = [
-            'method' => $method,
-            'pattern' => $this->createPattern($path),
+            'method' => $normalizedMethod,
+            'path' => $normalizedPath,
+            'isStatic' => $compiled['isStatic'],
+            'segments' => $compiled['segments'],
+            'pattern' => $compiled['pattern'],
+            'parameterTypes' => $compiled['parameterTypes'],
             'controller' => $controller,
             'action' => $action,
         ];
     }
 
-	/* 
-	Funkcja dzieli ścieżkę na fragmenty. Zwykłe fragmenty pozostawia bez zmian, 
-	a fragment zapisany w klamrach, na przykład {id}, zamienia na nazwany 
-	parametr przyjmujący cyfry. Następnie ponownie składa ścieżkę w wyrażenie regularne.
-	*/
-    private function createPattern(string $path): string
+    public function dispatch(Request $request): void
     {
-        $parts = explode('/', $path);
-
-        foreach ($parts as &$part) {
-            if (str_starts_with($part, '{') && str_ends_with($part, '}')) {
-                $parameterName = trim($part, '{}');
-                $part = '(?P<' . $parameterName . '>\d+)';
-                continue;
+        try {
+            $this->dispatchInternal($request);
+        } catch (RedirectException $redirect) {
+            if (!headers_sent()) {
+                header('Location: ' . $redirect->location, true, $redirect->statusCode);
             }
-
-            $part = preg_quote($part, '~');
+        } catch (HttpException $exception) {
+            $this->errorResponder->respond($request, $exception);
         }
-        unset($part);
-
-        return '~^' . implode('/', $parts) . '$~';
     }
 
-    public function dispatch(string $method, string $uri): bool
+    private function dispatchInternal(Request $request): void
     {
-        $path = parse_url($uri, PHP_URL_PATH) ?: '/';
+        if (!$request->hasValidUri) {
+            throw new BadRequestException('Malformed request URI.');
+        }
 
-        foreach ($this->routes as $route) {
+        $method = strtoupper(trim($request->method));
+        $path = $this->normalizePath($request->path);
+
+        // Static routes are evaluated before parameterized routes so exact paths always win.
+        $orderedRoutes = array_merge(
+            array_values(array_filter($this->routes, static fn (array $r): bool => $r['isStatic'])),
+            array_values(array_filter($this->routes, static fn (array $r): bool => !$r['isStatic'])),
+        );
+
+        foreach ($orderedRoutes as $route) {
             if ($route['method'] !== $method) {
                 continue;
             }
@@ -70,30 +140,196 @@ final class Routing
                 continue;
             }
 
-            $parameters = array_filter(
-                $matches,
-                static fn (int|string $key): bool => is_string($key),
-                ARRAY_FILTER_USE_KEY,
-            );
-
-            $parameters = array_map(
-                static fn (string $value): int|string =>
-                    ctype_digit($value) ? (int) $value : $value,
-                $parameters,
-            );
+            $parameters = $this->extractTypedParameters($matches, $route['parameterTypes']);
 
             $controllerClass = $route['controller'];
-            $controller = new $controllerClass();
+            $controller = ($this->controllerFactory)($controllerClass);
 
             if (!$controller instanceof AppController) {
-                throw new \RuntimeException('Invalid controller');
+                throw new \RuntimeException(sprintf('Invalid controller: %s', $controllerClass));
             }
 
-            $controller->{$route['action']}(...$parameters);
+            $action = $route['action'];
+            if (!method_exists($controller, $action)) {
+                throw new \RuntimeException(sprintf('Action %s::%s does not exist.', $controllerClass, $action));
+            }
 
-            return true;
+            $controller->{$action}(...$parameters);
+            return;
+        }
+
+        // If the path fits a parameterized route skeleton for this method, a parameter constraint failed (400).
+        if ($this->matchesAnyRouteSkeleton($orderedRoutes, $method, $path)) {
+            throw new BadRequestException('Invalid route parameter.');
+        }
+
+        // Check if the path exists under other HTTP methods (405 Method Not Allowed).
+        $allowedMethods = [];
+        foreach ($orderedRoutes as $route) {
+            if ($route['method'] !== $method && preg_match($route['pattern'], $path) === 1) {
+                $allowedMethods[] = $route['method'];
+            }
+        }
+
+        $allowedMethods = array_values(array_unique($allowedMethods));
+        if ($allowedMethods !== []) {
+            throw new MethodNotAllowedException($allowedMethods);
+        }
+
+        throw new NotFoundException('The requested resource was not found.');
+    }
+
+    /**
+     * @return array{
+     *     isStatic: bool,
+     *     segments: list<array{isParam: bool, literal?: string, name?: string, type?: 'int'|'string', regex?: string}>,
+     *     pattern: string,
+     *     parameterTypes: array<string, 'int'|'string'>
+     * }
+     */
+    private function compileRoute(string $normalizedPath): array
+    {
+        if ($normalizedPath === '/') {
+            return [
+                'isStatic' => true,
+                'segments' => [],
+                'pattern' => '~^/$~',
+                'parameterTypes' => [],
+            ];
+        }
+
+        $rawSegments = explode('/', ltrim($normalizedPath, '/'));
+        $isStatic = true;
+        $segments = [];
+        $patternParts = [];
+        $parameterTypes = [];
+
+        foreach ($rawSegments as $segment) {
+            if (preg_match('/^\{([a-zA-Z_][a-zA-Z0-9_]*)(?::(.+))?\}$/', $segment, $match) === 1) {
+                $isStatic = false;
+                $paramName = $match[1];
+                $customRegex = $match[2] ?? null;
+
+                if ($customRegex === null) {
+                    $type = 'int';
+                    $regex = '\d+';
+                } else {
+                    $type = 'string';
+                    $regex = $customRegex;
+                }
+
+                $parameterTypes[$paramName] = $type;
+                $segments[] = [
+                    'isParam' => true,
+                    'name' => $paramName,
+                    'type' => $type,
+                    'regex' => $regex,
+                ];
+                $patternParts[] = '(?P<' . $paramName . '>' . str_replace('~', '\~', $regex) . ')';
+                continue;
+            }
+
+            $segments[] = [
+                'isParam' => false,
+                'literal' => $segment,
+            ];
+            $patternParts[] = preg_quote($segment, '~');
+        }
+
+        return [
+            'isStatic' => $isStatic,
+            'segments' => $segments,
+            'pattern' => '~^/' . implode('/', $patternParts) . '$~',
+            'parameterTypes' => $parameterTypes,
+        ];
+    }
+
+    /**
+     * @param array<int|string, string>      $matches
+     * @param array<string, 'int'|'string'>  $parameterTypes
+     * @return array<string, int|string>
+     */
+    private function extractTypedParameters(array $matches, array $parameterTypes): array
+    {
+        $parameters = [];
+
+        foreach ($parameterTypes as $name => $type) {
+            if (!array_key_exists($name, $matches)) {
+                continue;
+            }
+
+            $rawValue = $matches[$name];
+            if ($type === 'int') {
+                $parsed = filter_var($rawValue, FILTER_VALIDATE_INT, [
+                    'options' => ['min_range' => 1],
+                ]);
+                if ($parsed === false) {
+                    throw new BadRequestException(sprintf('Route parameter "%s" must be a positive integer.', $name));
+                }
+
+                $parameters[$name] = $parsed;
+                continue;
+            }
+
+            $parameters[$name] = $rawValue;
+        }
+
+        return $parameters;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $routes
+     */
+    private function matchesAnyRouteSkeleton(array $routes, string $method, string $path): bool
+    {
+        if ($path === '/') {
+            return false;
+        }
+
+        $pathSegments = explode('/', ltrim($path, '/'));
+
+        foreach ($routes as $route) {
+            if ($route['method'] !== $method || $route['isStatic']) {
+                continue;
+            }
+
+            $routeSegments = $route['segments'];
+            if (count($routeSegments) !== count($pathSegments)) {
+                continue;
+            }
+
+            $skeletonMatches = true;
+            foreach ($routeSegments as $index => $segmentDef) {
+                if ($segmentDef['isParam']) {
+                    if ($pathSegments[$index] === '') {
+                        $skeletonMatches = false;
+                        break;
+                    }
+                    continue;
+                }
+
+                if (($segmentDef['literal'] ?? '') !== $pathSegments[$index]) {
+                    $skeletonMatches = false;
+                    break;
+                }
+            }
+
+            if ($skeletonMatches) {
+                return true;
+            }
         }
 
         return false;
+    }
+
+    private function normalizePath(string $path): string
+    {
+        $trimmed = trim($path);
+        if ($trimmed === '' || $trimmed === '/') {
+            return '/';
+        }
+
+        $withLeadingSlash = str_starts_with($trimmed, '/') ? $trimmed : '/' . $trimmed;
+        return rtrim($withLeadingSlash, '/') ?: '/';
     }
 }
