@@ -3,7 +3,7 @@ $navItems = [
     ['key' => 'home', 'label' => 'Home', 'href' => '/admin'],
     ['key' => 'club', 'label' => 'Club', 'href' => '/admin#club'],
     ['key' => 'schedule', 'label' => 'Schedule', 'href' => '/admin#schedule'],
-    ['key' => 'matches', 'label' => 'Matches', 'href' => '/admin#matches'],
+    ['key' => 'matches', 'label' => 'Matches', 'href' => '/admin/matches'],
     ['key' => 'analytics', 'label' => 'Analytics', 'href' => '/admin#analytics'],
     ['key' => 'accounts', 'label' => 'Accounts', 'href' => '/admin#accounts'],
 ];

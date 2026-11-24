@@ -16,6 +16,7 @@ $routing->get('/login', SecurityController::class, 'login');
 $routing->post('/login', SecurityController::class, 'authenticate');
 $routing->post('/logout', SecurityController::class, 'logout');
 $routing->get('/admin', AdminController::class, 'index');
+$routing->get('/admin/matches', AdminController::class, 'matches');
 
 $routeFound = $routing->dispatch(
     $_SERVER['REQUEST_METHOD'],
