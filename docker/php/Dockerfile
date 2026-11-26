@@ -29,6 +29,7 @@ RUN apk add --no-cache \
     && apk del .build-deps
 
 RUN { \
+      echo 'expose_php = Off'; \
       echo 'memory_limit = 256M'; \
       echo 'upload_max_filesize = 16M'; \
       echo 'post_max_size = 20M'; \
