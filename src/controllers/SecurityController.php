@@ -80,7 +80,7 @@ final class SecurityController extends AppController
             $this->request->clientIp,
         );
 
-        $this->redirect('/login', 303);
+        $this->redirect('/', 303);
     }
 
     public function me(): void

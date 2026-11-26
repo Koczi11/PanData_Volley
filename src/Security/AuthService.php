@@ -16,6 +16,7 @@ final class AuthService
     public const REMEMBER_TOKEN_TYPE = 'remember_me';
     private const SESSION_USER_ID_KEY = 'auth_user_id';
     private const DUMMY_BCRYPT_HASH = '$2y$10$usesomesillystringfore7hnbRJHxXVLeakoG8K30oukPsA.ztMG';
+    private const GENERIC_AUTH_FAILURE_MESSAGE = 'Invalid email, password, or selected role.';
 
     private ?User $cachedUser = null;
     private bool $userResolved = false;
@@ -72,7 +73,7 @@ final class AuthService
                 ],
             );
 
-            return AuthResult::failed('invalid_credentials', 'Invalid email or password.');
+            return AuthResult::failed('invalid_credentials', self::GENERIC_AUTH_FAILURE_MESSAGE);
         }
 
         if (!$user->canAuthenticate()) {
@@ -89,7 +90,7 @@ final class AuthService
 
                 return AuthResult::failed(
                     'inactive_account',
-                    'This account is inactive. Please contact your administrator.'
+                    self::GENERIC_AUTH_FAILURE_MESSAGE
                 );
             }
 
@@ -105,7 +106,7 @@ final class AuthService
 
             return AuthResult::failed(
                 'inactive_club',
-                'Your club is currently inactive. Please contact your administrator.'
+                self::GENERIC_AUTH_FAILURE_MESSAGE
             );
         }
 
@@ -125,7 +126,7 @@ final class AuthService
 
             return AuthResult::failed(
                 'role_mismatch',
-                'Selected role does not match this account.'
+                self::GENERIC_AUTH_FAILURE_MESSAGE
             );
         }
 
