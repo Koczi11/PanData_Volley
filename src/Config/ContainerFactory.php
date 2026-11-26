@@ -6,7 +6,11 @@ namespace App\Config;
 
 use App\Container;
 use App\Controller\AdminController;
+use App\Controller\AnalystController;
 use App\Controller\AppController;
+use App\Controller\CoachController;
+use App\Controller\PlatformController;
+use App\Controller\PlayerController;
 use App\Controller\SecurityController;
 use App\Http\ErrorResponder;
 use App\Http\Request;
@@ -104,8 +108,40 @@ final class ContainerFactory
         );
 
         $container->bind(
+            PlatformController::class,
+            static fn (Container $c): PlatformController => new PlatformController(
+                guard: $c->get(AccessGuard::class),
+                csrf: $c->get(CsrfTokenManager::class),
+            )
+        );
+
+        $container->bind(
             AdminController::class,
             static fn (Container $c): AdminController => new AdminController(
+                guard: $c->get(AccessGuard::class),
+                csrf: $c->get(CsrfTokenManager::class),
+            )
+        );
+
+        $container->bind(
+            CoachController::class,
+            static fn (Container $c): CoachController => new CoachController(
+                guard: $c->get(AccessGuard::class),
+                csrf: $c->get(CsrfTokenManager::class),
+            )
+        );
+
+        $container->bind(
+            AnalystController::class,
+            static fn (Container $c): AnalystController => new AnalystController(
+                guard: $c->get(AccessGuard::class),
+                csrf: $c->get(CsrfTokenManager::class),
+            )
+        );
+
+        $container->bind(
+            PlayerController::class,
+            static fn (Container $c): PlayerController => new PlayerController(
                 guard: $c->get(AccessGuard::class),
                 csrf: $c->get(CsrfTokenManager::class),
             )

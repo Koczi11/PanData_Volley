@@ -15,10 +15,22 @@ enum UserRole: string
     public function homePath(): string
     {
         return match ($this) {
-            self::SuperAdmin, self::ClubAdmin => '/admin',
+            self::SuperAdmin => '/platform',
+            self::ClubAdmin => '/admin',
             self::Coach => '/coach',
             self::Analyst => '/analyst',
             self::Player => '/player',
+        };
+    }
+
+    public function consoleLabel(): string
+    {
+        return match ($this) {
+            self::SuperAdmin => 'PLATFORM CONSOLE',
+            self::ClubAdmin => 'ADMIN CONSOLE',
+            self::Coach => 'COACH CONSOLE',
+            self::Analyst => 'ANALYST CONSOLE',
+            self::Player => 'PLAYER CONSOLE',
         };
     }
 

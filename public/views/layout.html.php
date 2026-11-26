@@ -38,9 +38,9 @@
     <?php endforeach; ?>
     <script src="https://kit.fontawesome.com/8fd9367667.js" crossorigin="anonymous"></script>
 </head>
-<body<?= !empty($useAdminNavbar) ? ' class="has-admin-navbar"' : '' ?>>
-    <?php if (!empty($useAdminNavbar)): ?>
-        <?php require __DIR__ . '/partials/admin-navbar.html.php'; ?>
+<body<?= !empty($useAppNavbar) ? ' class="has-app-navbar"' : '' ?>>
+    <?php if (!empty($useAppNavbar)): ?>
+        <?php require __DIR__ . '/partials/app-navbar.html.php'; ?>
     <?php else: ?>
         <?php require __DIR__ . '/partials/theme-toggle.html.php'; ?>
     <?php endif; ?>

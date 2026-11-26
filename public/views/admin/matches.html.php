@@ -1,7 +1,3 @@
-<?php
-$stylesheets = ['/css/admin.css'];
-$scripts = ['/js/admin-nav.js'];
-$useAdminNavbar = true;
-?>
-
-<main class="admin-shell" aria-label="Admin matches"></main>
+<main class="app-shell" aria-label="Admin matches">
+    <?php require dirname(__DIR__) . '/partials/workspace-banner.html.php'; ?>
+</main>

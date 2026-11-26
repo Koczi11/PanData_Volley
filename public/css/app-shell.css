@@ -1,7 +1,7 @@
 /* ==========================================================================
-   Universal Admin Top Navbar
+   Universal Application Top Navbar & Workspace Shell
    ========================================================================== */
-.admin-navbar {
+.app-navbar {
     position: sticky;
     top: 0;
     z-index: 100;
@@ -11,11 +11,11 @@
     box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.08);
 }
 
-html[data-theme="dark"] .admin-navbar {
+html[data-theme="dark"] .app-navbar {
     box-shadow: 0 0.25rem 1.5rem rgba(0, 0, 0, 0.35);
 }
 
-.admin-navbar__inner {
+.app-navbar__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -26,8 +26,7 @@ html[data-theme="dark"] .admin-navbar {
     padding: 0.625rem 1.5rem;
 }
 
-/* Brand po lewej: miejsce na przyszłe logo + napis PanData Volley */
-.admin-navbar__brand {
+.app-navbar__brand {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
@@ -36,18 +35,18 @@ html[data-theme="dark"] .admin-navbar {
     text-decoration: none;
 }
 
-.admin-navbar__brand:hover {
+.app-navbar__brand:hover {
     color: var(--color-text);
     text-decoration: none;
 }
 
-.admin-navbar__brand:focus-visible {
+.app-navbar__brand:focus-visible {
     outline: 0.125rem solid var(--color-primary);
     outline-offset: 0.25rem;
     border-radius: var(--radius-sm);
 }
 
-.admin-navbar__logo-slot {
+.app-navbar__logo-slot {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -61,13 +60,13 @@ html[data-theme="dark"] .admin-navbar {
     flex-shrink: 0;
 }
 
-.admin-navbar__brand-text {
+.app-navbar__brand-text {
     display: flex;
     flex-direction: column;
     line-height: 1.1;
 }
 
-.admin-navbar__brand-name {
+.app-navbar__brand-name {
     font-size: 1rem;
     font-weight: 800;
     letter-spacing: 0.04rem;
@@ -75,7 +74,7 @@ html[data-theme="dark"] .admin-navbar {
     white-space: nowrap;
 }
 
-.admin-navbar__brand-tag {
+.app-navbar__brand-tag {
     font-family: var(--font-mono);
     font-size: 0.625rem;
     font-weight: 600;
@@ -84,13 +83,12 @@ html[data-theme="dark"] .admin-navbar {
     margin-top: 0.1875rem;
 }
 
-/* Linki nawigacyjne (desktop) */
-.admin-navbar__nav {
+.app-navbar__nav {
     display: flex;
     align-items: center;
 }
 
-.admin-navbar__list {
+.app-navbar__list {
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -99,7 +97,7 @@ html[data-theme="dark"] .admin-navbar {
     padding: 0;
 }
 
-.admin-navbar__link {
+.app-navbar__link {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -114,31 +112,30 @@ html[data-theme="dark"] .admin-navbar {
                 background-color var(--transition-speed) var(--transition-ease);
 }
 
-.admin-navbar__link:hover {
+.app-navbar__link:hover {
     color: var(--color-text);
     background-color: var(--color-surface-muted);
     text-decoration: none;
 }
 
-.admin-navbar__link.is-active {
+.app-navbar__link.is-active {
     color: var(--color-primary);
     background-color: rgba(222, 80, 53, 0.12);
 }
 
-.admin-navbar__link:focus-visible {
+.app-navbar__link:focus-visible {
     outline: 0.125rem solid var(--color-primary);
     outline-offset: 0.125rem;
 }
 
-/* Prawa strona navbara */
-.admin-navbar__actions {
+.app-navbar__actions {
     display: flex;
     align-items: center;
     gap: 0.625rem;
     flex-shrink: 0;
 }
 
-.admin-navbar__user-pill {
+.app-navbar__user-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.4375rem;
@@ -152,7 +149,7 @@ html[data-theme="dark"] .admin-navbar {
     color: var(--color-text);
 }
 
-.admin-navbar__status-dot {
+.app-navbar__status-dot {
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
@@ -161,8 +158,7 @@ html[data-theme="dark"] .admin-navbar {
     flex-shrink: 0;
 }
 
-/* Osadzenie globalnego przycisku .theme-toggle wewnątrz navbara */
-.has-admin-navbar .theme-toggle {
+.has-app-navbar .theme-toggle {
     position: static;
     width: 2.375rem;
     height: 2.375rem;
@@ -170,7 +166,7 @@ html[data-theme="dark"] .admin-navbar {
     background: var(--color-surface-muted);
 }
 
-.admin-navbar__logout {
+.app-navbar__logout {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -190,19 +186,18 @@ html[data-theme="dark"] .admin-navbar {
                 background-color var(--transition-speed) var(--transition-ease);
 }
 
-.admin-navbar__logout:hover {
+.app-navbar__logout:hover {
     border-color: var(--color-primary);
     color: var(--color-primary);
     background-color: rgba(222, 80, 53, 0.08);
 }
 
-.admin-navbar__logout:focus-visible {
+.app-navbar__logout:focus-visible {
     outline: 0.125rem solid var(--color-primary);
     outline-offset: 0.125rem;
 }
 
-/* Przycisk Hamburger (widoczny na mobile/tablet) */
-.admin-navbar__hamburger {
+.app-navbar__hamburger {
     display: none;
     flex-direction: column;
     align-items: center;
@@ -219,16 +214,16 @@ html[data-theme="dark"] .admin-navbar {
                 background-color var(--transition-speed) var(--transition-ease);
 }
 
-.admin-navbar__hamburger:hover {
+.app-navbar__hamburger:hover {
     border-color: var(--color-primary);
 }
 
-.admin-navbar__hamburger:focus-visible {
+.app-navbar__hamburger:focus-visible {
     outline: 0.125rem solid var(--color-primary);
     outline-offset: 0.125rem;
 }
 
-.admin-navbar__hamburger-line {
+.app-navbar__hamburger-line {
     width: 1.125rem;
     height: 0.125rem;
     border-radius: 999rem;
@@ -237,43 +232,110 @@ html[data-theme="dark"] .admin-navbar {
                 opacity var(--transition-speed) var(--transition-ease);
 }
 
-.admin-navbar.is-open .admin-navbar__hamburger-line:nth-child(1) {
+.app-navbar.is-open .app-navbar__hamburger-line:nth-child(1) {
     transform: translateY(0.4375rem) rotate(45deg);
 }
 
-.admin-navbar.is-open .admin-navbar__hamburger-line:nth-child(2) {
+.app-navbar.is-open .app-navbar__hamburger-line:nth-child(2) {
     opacity: 0;
 }
 
-.admin-navbar.is-open .admin-navbar__hamburger-line:nth-child(3) {
+.app-navbar.is-open .app-navbar__hamburger-line:nth-child(3) {
     transform: translateY(-0.4375rem) rotate(-45deg);
 }
 
-.admin-navbar__mobile-account {
+.app-navbar__mobile-account {
     display: none;
 }
 
-/* Główny kontener strony administratora */
-.admin-shell {
+/* ==========================================================================
+   Role Workspace Shell & Context Banner
+   ========================================================================== */
+.app-shell {
     max-width: 86rem;
     margin: 0 auto;
     padding: 1.75rem 1.5rem 3rem;
+}
+
+.workspace-banner {
+    padding: 1.75rem 2rem;
+    border-radius: var(--radius-lg);
+    border: 0.0625rem solid var(--color-border);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-soft);
+}
+
+.workspace-banner__badge {
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999rem;
+    background-color: rgba(222, 80, 53, 0.12);
+    border: 0.0625rem solid rgba(222, 80, 53, 0.35);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08rem;
+    color: var(--color-primary);
+    margin-bottom: 0.875rem;
+}
+
+.workspace-banner__title {
+    font-size: 1.625rem;
+    margin-bottom: 0.5rem;
+}
+
+.workspace-banner__description {
+    font-size: 0.9375rem;
+    max-width: 48rem;
+    margin-bottom: 1.5rem;
+}
+
+.workspace-banner__meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.875rem;
+    margin: 0;
+}
+
+.workspace-banner__meta-item {
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius-md);
+    border: 0.0625rem solid var(--color-border);
+    background-color: var(--color-surface-muted);
+}
+
+.workspace-banner__meta-item dt {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.06rem;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin-bottom: 0.25rem;
+}
+
+.workspace-banner__meta-item dd {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-text);
+    word-break: break-word;
 }
 
 /* ==========================================================================
    Responsive Breakpoints (Mobile Hamburger Menu)
    ========================================================================== */
 @media (max-width: 64rem) {
-    .admin-navbar__inner {
+    .app-navbar__inner {
         position: relative;
         padding: 0.625rem 1rem;
     }
 
-    .admin-navbar__hamburger {
+    .app-navbar__hamburger {
         display: inline-flex;
     }
 
-    .admin-navbar__nav {
+    .app-navbar__nav {
         display: none;
         position: absolute;
         top: 100%;
@@ -289,29 +351,29 @@ html[data-theme="dark"] .admin-navbar {
         box-shadow: var(--shadow-soft);
     }
 
-    .admin-navbar.is-open .admin-navbar__nav {
+    .app-navbar.is-open .app-navbar__nav {
         display: flex;
     }
 
-    .admin-navbar__list {
+    .app-navbar__list {
         flex-direction: column;
         align-items: stretch;
         gap: 0.375rem;
     }
 
-    .admin-navbar__link {
+    .app-navbar__link {
         width: 100%;
         padding: 0.75rem 0.875rem;
     }
 }
 
 @media (max-width: 44rem) {
-    .admin-navbar__user-pill,
-    .admin-navbar__logout-form {
+    .app-navbar__user-pill,
+    .app-navbar__logout-form {
         display: none;
     }
 
-    .admin-navbar__mobile-account {
+    .app-navbar__mobile-account {
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
@@ -319,7 +381,7 @@ html[data-theme="dark"] .admin-navbar {
         border-top: 0.0625rem solid var(--color-border);
     }
 
-    .admin-navbar__mobile-user {
+    .app-navbar__mobile-user {
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -328,12 +390,16 @@ html[data-theme="dark"] .admin-navbar {
         color: var(--color-muted);
     }
 
-    .admin-navbar__logout--mobile {
+    .app-navbar__logout--mobile {
         width: 100%;
         padding: 0.6875rem 1rem;
     }
 
-    .admin-shell {
+    .app-shell {
         padding: 1.25rem 1rem 2.25rem;
+    }
+
+    .workspace-banner {
+        padding: 1.25rem 1.125rem;
     }
 }

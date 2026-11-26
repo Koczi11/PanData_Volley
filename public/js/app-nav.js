@@ -1,7 +1,7 @@
-const navbar = document.querySelector('[data-admin-navbar]');
-const toggleButton = navbar?.querySelector('.admin-navbar__hamburger') ?? null;
-const navMenu = navbar?.querySelector('#admin-navbar-menu') ?? null;
-const navLinks = navbar?.querySelectorAll('.admin-navbar__link') ?? [];
+const navbar = document.querySelector('[data-app-navbar]');
+const toggleButton = navbar?.querySelector('.app-navbar__hamburger') ?? null;
+const navMenu = navbar?.querySelector('#app-navbar-menu') ?? null;
+const navLinks = navbar?.querySelectorAll('.app-navbar__link') ?? [];
 const desktopMediaQuery = window.matchMedia('(min-width: 64.0625rem)');
 
 function setMenuOpen(isOpen) {
